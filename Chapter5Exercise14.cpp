@@ -20,7 +20,7 @@ int GetStudentCount();
 void GetStudentNames(int count, vector<string>& names);
 void SaveNamesToFile(const vector<string>& names);
 void DisplayFirstAndLast(const vector<string>& names);
-
+ 
 int main()
 {
     do {
