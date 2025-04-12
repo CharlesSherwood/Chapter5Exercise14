@@ -2,8 +2,8 @@
 Programmer Name:Charles Sherwood
 Date:4/2025
 Requirements:This program should ask the user for the amount 
-of students they want to put inti 
-alphabetical order.
+of students they want to add and which one would be first and 
+which one would be last.
 */
 
 #include <iostream>
