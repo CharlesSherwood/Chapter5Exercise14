@@ -100,6 +100,6 @@ bool Repeat() {
     char choice;
     cout << "Would you like to run the program again? (Y/N): ";
     cin >> choice;
-    cin.ignore(); // Clear buffer
+    cin.ignore();
     return (choice == 'Y' || choice == 'y');
 }
