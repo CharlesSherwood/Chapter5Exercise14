@@ -7,65 +7,62 @@ alphabetical order.
 */
 
 #include <iostream>
+#include <fstream>
 #include <string>
 using namespace std;
 
+const int MAX_STUDENTS = 25;
+const string pathName = R"(C:\Users\CHARLIE BOI\Downloads\)"; // Constant path to LineUp.txt
+
 // Function Prototypes
-bool Repeat();
 void Welcome();
-int GetStudentCount();
-void GetStudentNames(int count, string names[]);
+int LoadStudentNames(string names[]);
 void DisplayFirstAndLast(const string names[], int count);
 
-const int MAX_STUDENTS = 25;
+int main() {
+    Welcome();
 
-int main()
-{
-    do {
-        Welcome();
+    string StudentNames[MAX_STUDENTS];
+    int NumStudents = LoadStudentNames(StudentNames);
 
-        int NumStudents = GetStudentCount();
-        string StudentNames[MAX_STUDENTS];
-
-        GetStudentNames(NumStudents, StudentNames);
+    if (NumStudents == 0) {
+        cout << "No names were found in LineUp.txt.\n";
+    }
+    else {
         DisplayFirstAndLast(StudentNames, NumStudents);
+    }
 
-    } while (Repeat());
-
-    cout << "Thank you for using the program!\n";
+    cout << "\nThank you for using the program!\n";
     return 0;
 }
 
 // Displays welcome message
 void Welcome() {
-    cout << "---------------------------------------------\n";
-    cout << "|!! Welcome Let's Get Your Students Names !!|\n";
-    cout << "---------------------------------------------\n";
+    cout << "----------------------------------------------------------\n";
+    cout << "|!! Welcome! Reading Student Line-Up From a File !!      |\n";
+    cout << "----------------------------------------------------------\n";
 }
 
-// Gets and validates number of students
-int GetStudentCount() {
-    int count;
-    cout << "How Many Students Do You Have In Your Class (1-25)?: ";
-    cin >> count;
+// Loads student names from the LineUp.txt file
+int LoadStudentNames(string names[]) {
+    string fullPath = pathName + "LineUp.txt";
+    ifstream inputFile(fullPath.c_str()); // safer for compatibility
 
-    while (count < 1 || count > 25) {
-        cout << "---------------------------------------------\n";
-        cout << "!! Invalid Number. Please Enter 1 to 25 Only !!\n";
-        cout << "---------------------------------------------\n";
-        cin >> count;
+    int count = 0;
+
+    if (!inputFile) {
+        cerr << "Error: Could not open file at path: " << fullPath << "\n";
+        return 0;
     }
 
-    cin.ignore();
+    while (count < MAX_STUDENTS && getline(inputFile, names[count])) {
+        if (!names[count].empty()) {
+            ++count;
+        }
+    }
+
+    inputFile.close();
     return count;
-}
-
-// Gets student names from user input
-void GetStudentNames(int count, string names[]) {
-    for (int i = 0; i < count; ++i) {
-        cout << "Please Enter The Name Of Student " << (i + 1) << ": ";
-        getline(cin, names[i]);
-    }
 }
 
 // Sorts names manually and displays the first and last alphabetically
@@ -77,10 +74,10 @@ void DisplayFirstAndLast(const string names[], int count) {
         sortedNames[i] = names[i];
     }
 
+    // Bubble sort
     for (int i = 0; i < count - 1; ++i) {
         for (int j = 0; j < count - i - 1; ++j) {
             if (sortedNames[j] > sortedNames[j + 1]) {
-                // Swap the names
                 string temp = sortedNames[j];
                 sortedNames[j] = sortedNames[j + 1];
                 sortedNames[j + 1] = temp;
@@ -93,14 +90,3 @@ void DisplayFirstAndLast(const string names[], int count) {
     cout << "Last in line (Alphabetically): " << sortedNames[count - 1] << endl;
     cout << "======================================\n";
 }
-
-
-// Ask if the user wants to repeat the program
-bool Repeat() {
-    char choice;
-    cout << "Would you like to run the program again? (Y/N): ";
-    cin >> choice;
-    cin.ignore(); // Clear buffer
-    return (choice == 'Y' || choice == 'y');
-}
- 
