@@ -1,9 +1,8 @@
 /*FileName:Chapter5Exercise14.cpp
 Programmer Name:Charles Sherwood
 Date:4/2025
-Requirements:This program should ask the user for the amount 
-of students they want to put inti 
-alphabetical order.
+Requirements:This program should read the file LineUp.txt
+and puit the names in first and last
 */
 
 #include <iostream>
@@ -18,12 +17,15 @@ const string pathName = R"(C:\Users\CHARLIE BOI\Downloads\)"; // Constant path t
 void Welcome();
 int LoadStudentNames(string names[]);
 void DisplayFirstAndLast(const string names[], int count);
+int ReadNamesFromFileAndDisplay(const string& filePath, string names[], int maxCount);
 
 int main() {
     Welcome();
 
     string StudentNames[MAX_STUDENTS];
-    int NumStudents = LoadStudentNames(StudentNames);
+    string fullPath = pathName + "LineUp.txt";
+
+    int NumStudents = ReadNamesFromFileAndDisplay(fullPath, StudentNames, MAX_STUDENTS);
 
     if (NumStudents == 0) {
         cout << "No names were found in LineUp.txt.\n";
@@ -35,6 +37,8 @@ int main() {
     cout << "\nThank you for using the program!\n";
     return 0;
 }
+
+
 
 // Displays welcome message
 void Welcome() {
@@ -89,4 +93,28 @@ void DisplayFirstAndLast(const string names[], int count) {
     cout << "First in line (Alphabetically): " << sortedNames[0] << endl;
     cout << "Last in line (Alphabetically): " << sortedNames[count - 1] << endl;
     cout << "======================================\n";
+}
+
+int ReadNamesFromFileAndDisplay(const string& filePath, string names[], int maxCount) {
+    ifstream inputFile(filePath.c_str());
+    int count = 0;
+
+    if (!inputFile) {
+        cerr << "Error: Could not open file at: " << filePath << endl;
+        return 0;
+    }
+
+    string line;
+    cout << "\nNames Read From File:\n";
+    cout << "---------------------\n";
+
+    while (count < maxCount && getline(inputFile, line)) {
+        if (!line.empty()) {
+            names[count++] = line;
+            cout << line << endl;
+        }
+    }
+
+    inputFile.close();
+    return count;
 }
