@@ -7,31 +7,28 @@ alphabetical order.
 */
 
 #include <iostream>
-#include <fstream>
 #include <string>
-#include <vector>
-#include <algorithm>
 using namespace std;
 
 // Function Prototypes
 bool Repeat();
 void Welcome();
 int GetStudentCount();
-void GetStudentNames(int count, vector<string>& names);
-void SaveNamesToFile(const vector<string>& names);
-void DisplayFirstAndLast(const vector<string>& names);
- 
+void GetStudentNames(int count, string names[]);
+void DisplayFirstAndLast(const string names[], int count);
+
+const int MAX_STUDENTS = 25;
+
 int main()
 {
     do {
         Welcome();
 
         int NumStudents = GetStudentCount();
-        vector<string> StudentNames;
+        string StudentNames[MAX_STUDENTS];
 
         GetStudentNames(NumStudents, StudentNames);
-        SaveNamesToFile(StudentNames);
-        DisplayFirstAndLast(StudentNames);
+        DisplayFirstAndLast(StudentNames, NumStudents);
 
     } while (Repeat());
 
@@ -41,9 +38,9 @@ int main()
 
 // Displays welcome message
 void Welcome() {
-    cout << "----------------------------------------------------------\n";
-    cout << "|!! Welcome! Let's Alphabetize Your Students' Names !!   |\n";
-    cout << "----------------------------------------------------------\n";
+    cout << "---------------------------------------------\n";
+    cout << "|!! Welcome Let's Get Your Students Names !!|\n";
+    cout << "---------------------------------------------\n";
 }
 
 // Gets and validates number of students
@@ -64,42 +61,39 @@ int GetStudentCount() {
 }
 
 // Gets student names from user input
-void GetStudentNames(int count, vector<string>& names) {
-    string name;
+void GetStudentNames(int count, string names[]) {
     for (int i = 0; i < count; ++i) {
         cout << "Please Enter The Name Of Student " << (i + 1) << ": ";
-        getline(cin, name);
-        names.push_back(name);
+        getline(cin, names[i]);
     }
 }
 
-// Saves names to a file
-void SaveNamesToFile(const vector<string>& names) {
-    ofstream outFile("StudentNames.txt");
-    if (!outFile) {
-        cerr << "Error opening file for writing!" << endl;
-        return;
+// Sorts names manually and displays the first and last alphabetically
+void DisplayFirstAndLast(const string names[], int count) {
+    if (count == 0) return;
+
+    string sortedNames[MAX_STUDENTS];
+    for (int i = 0; i < count; ++i) {
+        sortedNames[i] = names[i];
     }
 
-    for (const auto& name : names) {
-        outFile << name << endl;
+    for (int i = 0; i < count - 1; ++i) {
+        for (int j = 0; j < count - i - 1; ++j) {
+            if (sortedNames[j] > sortedNames[j + 1]) {
+                // Swap the names
+                string temp = sortedNames[j];
+                sortedNames[j] = sortedNames[j + 1];
+                sortedNames[j + 1] = temp;
+            }
+        }
     }
-
-    outFile.close();
-}
-
-// Sorts names and displays the first and last alphabetically
-void DisplayFirstAndLast(const vector<string>& names) {
-    if (names.empty()) return;
-
-    vector<string> sortedNames = names;
-    sort(sortedNames.begin(), sortedNames.end());
 
     cout << "\n======================================\n";
-    cout << "First in line (Alphabetically): " << sortedNames.front() << endl;
-    cout << "Last in line (Alphabetically): " << sortedNames.back() << endl;
+    cout << "First in line (Alphabetically): " << sortedNames[0] << endl;
+    cout << "Last in line (Alphabetically): " << sortedNames[count - 1] << endl;
     cout << "======================================\n";
 }
+
 
 // Ask if the user wants to repeat the program
 bool Repeat() {
