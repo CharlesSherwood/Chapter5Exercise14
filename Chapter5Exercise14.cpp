@@ -2,7 +2,7 @@
 Programmer Name:Charles Sherwood
 Date:4/2025
 Requirements:This program should read the file LineUp.txt
-and puit the names in first and last
+and put the names in first and last
 */
 
 #include <iostream>
@@ -78,7 +78,6 @@ void DisplayFirstAndLast(const string names[], int count) {
         sortedNames[i] = names[i];
     }
 
-    // Bubble sort
     for (int i = 0; i < count - 1; ++i) {
         for (int j = 0; j < count - i - 1; ++j) {
             if (sortedNames[j] > sortedNames[j + 1]) {
